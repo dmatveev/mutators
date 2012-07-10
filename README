@@ -1,0 +1,52 @@
+The Data.Mutators package provides an easy way for updating
+complex objects.
+
+Given a type, i.e.
+
+  data Foo = Foo { foo :: Int
+       	     	 , bar :: Bool
+		 }
+		 deriving (Show)
+
+the Data.Mutators package can write the following functions
+for you:
+
+  setFoo :: Foo -> Int -> Foo
+  modFoo :: Foo -> (Int -> Int) -> Foo
+
+  setBar :: Foo -> Bool -> Foo
+  modBar :: Foo -> (Bool -> Bool) -> Foo
+
+so
+	
+  > let f = Foo 1 True
+  > f
+  Foo {foo = 1, bar = True}
+  > setFoo f 2
+  Foo {foo = 2, bar = True}
+  > modFoo f pred
+  Foo {foo = 0, bar = True}
+  > modBar f not
+  Foo {foo = 1, bar = False}
+
+All you need for that is
+
+  $(genMutators ''Foo)
+
+where Foo is the name of the data type, not the name of the
+particular constructor of that type.
+
+The mutator functions may be generated only for data type
+constructors declared with the record syntax. If you have
+an algebraic data type with a mixed definition, i.e.
+
+  data Foo = Foo Bool
+           | Bar { bar :: Int }
+	   | Baz
+
+mutator functions will be generated only for the Bar
+constructor.
+
+-----
+
+(c) 2012 Dmitry Matveev <me@dmitrymatveev.co.uk>
