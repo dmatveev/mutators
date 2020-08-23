@@ -59,7 +59,7 @@ isRecord _= False
 
 genMutators' :: Name -> MutatorNameGen -> Q [Dec]
 genMutators' dataName mng = do
-    TyConI (DataD _ _ _ defs _) <- reify dataName
+    TyConI (DataD _ _ _ _ defs _) <- reify dataName
     let names = map name $ concat $ map fields $ filter isRecord defs
     liftM concat $ mapM (genMutator mng) names
   where fields (RecC _ fs) = fs
